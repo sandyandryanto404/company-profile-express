@@ -1,3 +1,14 @@
+/**
+ * This file is part of the Sandy Andryanto Company Profile Website.
+ *
+ * @author     Sandy Andryanto <sandy.andryanto404@gmail.com>
+ * @copyright  2024
+ *
+ * For the full copyright and license information,
+ * please view the LICENSE.md file that was distributed
+ * with this source code.
+ */
+
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -13,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
-      username: DataTypes.STRING,
       email: DataTypes.STRING,
       phone: DataTypes.STRING,
       password: DataTypes.STRING,
+      image: DataTypes.STRING,
       firstName: {
-        field: "first_names",
+        field: "first_name",
         type: DataTypes.STRING,
       },
       lastName: {
@@ -27,27 +38,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       gender: DataTypes.STRING,
       country: DataTypes.STRING,
-      province: DataTypes.STRING,
-      regency: DataTypes.STRING,
-      postalCode: {
-        field: "postal_code",
-        type: DataTypes.STRING,
-      },
-      birthPlace: {
-        field: "birth_place",
-        type: DataTypes.STRING,
-      },
-      birthDate: {
-        field: "birth_date",
-        type: DataTypes.DATE,
-      },
-      facebook: DataTypes.STRING,
-      instagram: DataTypes.STRING,
-      twitter: DataTypes.STRING,
       address: DataTypes.STRING,
       aboutMe: {
         field: "about_me",
         type: DataTypes.DATE,
+      },
+      resetToken: {
+        field: "reset_token",
+        type: DataTypes.STRING,
+      },
+      confirmToken: {
+        field: "confirm_token",
+        type: DataTypes.STRING,
       },
       status: DataTypes.INTEGER,
       createdAt: {
