@@ -88,7 +88,7 @@ npm install mysql2 -g
 npm install
 ```
 
-#### 3. Make a .env.local file and customize its settings 
+#### 3. Make a .env file and customize its settings 
 ```shell
 APP_PORT=8000
 DB_DATABASE={app-database-name}
