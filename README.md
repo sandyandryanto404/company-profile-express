@@ -85,6 +85,7 @@ cd company-profile-express
 ```shell
 npm install -g sequelize-cli
 npm install mysql2 -g
+npm install nodemon -g
 npm install
 ```
 
@@ -104,21 +105,23 @@ JWT_SECRET_KEY=secret
 ```shell
 sudo service mysqld start / sudo systemctl start mariadb
 CREATE DATABASE {database-name}
+mkdir uploads
 sequelize db:migrate
-sequelize seed:create --name 20240412161744-create-user.js
-sequelize seed:create --name 20240412164435-create-reference.js
-sequelize seed:create --name 20240412164447-create-contact.js
-sequelize seed:create --name 20240412164452-create-customer.js
-sequelize seed:create --name 20240412164458-create-faq.js
-sequelize seed:create --name 20240412164503-create-service.js
-sequelize seed:create --name 20240412164508-create-slider.js
-sequelize seed:create --name 20240412164514-create-team.js
-sequelize seed:create --name 20240412164520-create-testimonial.js
-sequelize seed:create --name 20240412164528-create-portfolio.js
-sequelize seed:create --name 20240413015206-create-portfolio-image.js
-sequelize seed:create --name 20240413015837-create-article.js
-sequelize seed:create --name 20240413015842-create-article-reference.js
-sequelize seed:create --name 20240413015848-create-article-comment.js
+sequelize db:seed --seed 20240412161744-create-user.js
+sequelize db:seed --seed 20240412164435-create-reference.js
+sequelize db:seed --seed 20240412164447-create-contact.js
+sequelize db:seed --seed 20240412164452-create-customer.js
+sequelize db:seed --seed 20240412164458-create-faq.js
+sequelize db:seed --seed 20240412164503-create-service.js
+sequelize db:seed --seed 20240412164508-create-slider.js
+sequelize db:seed --seed 20240412164514-create-team.js
+sequelize db:seed --seed 20240412164520-create-testimonial.js
+sequelize db:seed --seed 20240412164528-create-portfolio.js
+sequelize db:seed --seed 20240413015206-create-portfolio-image.js
+sequelize db:seed --seed 20240413015837-create-article.js
+sequelize db:seed --seed 20240413015842-create-article-reference.js
+sequelize db:seed --seed 20240413015848-create-article-comment.js
+nodemon
 ```
 
 #### 5. Install frontend dependencies, please move to directory company-profile-express/frontend
