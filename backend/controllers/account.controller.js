@@ -12,6 +12,7 @@
 const auth_user = require('../helpers/auth_user');
 const db = require("../models");
 const User = db.User;
+const fs = require('fs');
 var bcrypt = require('bcryptjs');
 
 async function detail(req, res) {
@@ -47,8 +48,7 @@ async function password(req, res) {
         return;
     }
 
-    let user_session = await auth_user(req)
-    let user = user_session.user
+    let user = await auth_user(req)
     let current_password = req.body.current_password;
     let password = req.body.password;
     let password_confirmation = req.body.password_confirmation;
@@ -103,8 +103,7 @@ async function update(req, res) {
         return;
     }
 
-    let user_session = await auth_user(req)
-    let user = user_session.user
+    let user = await auth_user(req)
     let email = req.body.email;
     let phone = req.body.phone;
     let first_name = req.body.first_name;
@@ -175,12 +174,49 @@ async function update(req, res) {
 
 
 async function upload(req, res) {
-    res.status(200).send({
-        data: null,
-        status: true,
-        message: "ok"
-    });
-    return;
+
+    let user = await auth_user(req)
+    if (req.file) {
+
+        if (user.image) {
+            let imageExists = user.image
+            let fileUrls = imageExists.split(".");
+            let fileImage = fileUrls[0]
+            fs.unlink('./' + fileImage, function (err) {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        }
+
+        let file = req.file
+        let fileUrl = file.destination + "" + file.filename
+
+        await User.update({
+            image: fileUrl
+        }, {
+            where: {
+                id: user.id
+            }
+        })
+
+        res.status(200).send({
+            data: {
+                image: fileUrl
+            },
+            status: true,
+            message: "Your profile image has been changed"
+        });
+
+    } else {
+        res.status(200).send({
+            data: {
+                image: user.image
+            },
+            status: true,
+            message: "Your profile image has been changed"
+        });
+    }
 }
 
 module.exports = {

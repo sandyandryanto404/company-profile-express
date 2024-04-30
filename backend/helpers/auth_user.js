@@ -13,21 +13,25 @@ const jwt = require('jsonwebtoken');
 const db = require("../models");
 const User = db.User;
 
-async function auth_user(req){
+async function auth_user(req) {
     const bearerHeader = req.headers['authorization'];
-    if(typeof bearerHeader !== 'undefined'){
+    if (typeof bearerHeader !== 'undefined') {
         var user_id;
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];
-        jwt.verify(bearerToken, process.env.JWT_SECRET_KEY, (err, authData)=>{
-            if(err){
+        jwt.verify(bearerToken, process.env.JWT_SECRET_KEY, (err, authData) => {
+            if (err) {
                 console.log(err);
             }
-            if(authData["sub"]){
+            if (authData["sub"]) {
                 user_id = authData["sub"]
             }
         })
-        return await User.findOne({ where: { id: user_id } })
+        return await User.findOne({
+            where: {
+                id: user_id
+            }
+        })
     }
     return undefined
 }

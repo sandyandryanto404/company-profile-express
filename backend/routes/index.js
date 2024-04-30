@@ -15,10 +15,24 @@ const articleController = require("../controllers/article.controller.js");
 const authController = require("../controllers/auth.controller.js");
 const pageController = require("../controllers/page.controller.js");
 const portfolioController = require("../controllers/portfolio.controller.js");
+const multer = require('multer')
+const path = require('path')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+    }
+})
+
+const upload = multer({
+    storage: storage
+});
 
 // Account Management
 appRouter.get('/account/detail', accountController.detail);
-appRouter.post('/account/upload', accountController.upload);
+appRouter.post('/account/upload', upload.single('file_image'), accountController.upload);
 appRouter.post('/account/update', accountController.update);
 appRouter.post('/account/password', accountController.password);
 
@@ -48,4 +62,6 @@ appRouter.post('/page/subscribe', pageController.subscribe);
 // Portfolio Pages
 appRouter.get('/portfolio/list', portfolioController.list);
 appRouter.get('/portfolio/detail/:id', portfolioController.detail);
-module.exports = app => { app.use('/api', [ appRouter]); };
+module.exports = app => {
+    app.use('/api', [appRouter]);
+};

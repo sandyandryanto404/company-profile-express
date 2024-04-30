@@ -9,15 +9,22 @@
  * with this source code.
  */
 
-const { expressjwt  } = require('express-jwt');
+const {
+    expressjwt
+} = require('express-jwt');
 
 module.exports = jwt
 
 function jwt() {
-    const { secret } = {
-        secret:  process.env.JWT_SECRET_KEY
+    const {
+        secret
+    } = {
+        secret: process.env.JWT_SECRET_KEY
     }
-    return expressjwt({ secret, algorithms: ['HS256'] }).unless({
+    return expressjwt({
+        secret,
+        algorithms: ['HS256']
+    }).unless({
         path: [
             // public routes that don't require authentication
             '/',
@@ -33,4 +40,3 @@ function jwt() {
         ]
     });
 }
-

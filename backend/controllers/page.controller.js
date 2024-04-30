@@ -9,43 +9,77 @@
  * with this source code.
  */
 
-async function ping(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+
+
+async function ping(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function home(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function home(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function about(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function about(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function service(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function service(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function faq(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function faq(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function contact(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function contact(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function message(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function message(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function subscribe(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function subscribe(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 

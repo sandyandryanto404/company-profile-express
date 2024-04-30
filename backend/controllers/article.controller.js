@@ -9,23 +9,39 @@
  * with this source code.
  */
 
-async function list(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function list(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function detail(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function detail(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function comments(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function comments(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
-async function comment(req, res){
-    res.status(200).send({ data: null, status: true, message: "ok" });
+async function comment(req, res) {
+    res.status(200).send({
+        data: null,
+        status: true,
+        message: "ok"
+    });
     return;
 }
 
