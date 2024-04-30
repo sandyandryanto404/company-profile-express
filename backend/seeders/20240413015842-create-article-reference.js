@@ -19,33 +19,36 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     let data = [];
     let articles = await models.Article.findAll();
-    let categories = await models.Reference.findAll({
-      order: [Sequelize.literal("RAND()")],
-      where: { type: 1 },
-      limit: 3,
-    });
-    let tags = await models.Reference.findAll({
-      order: [Sequelize.literal("RAND()")],
-      where: { type: 2 },
-      limit: 5,
-    });
 
-    articles.map((article) => {
-      categories.map((category) => {
+    await Promise.all(
+      articles.map(async (article) => {
+
+        let categories =  await models.Reference.findAll({
+          attributes: ['id', 'name', 'slug'],
+          order: [Sequelize.literal("RAND()")],
+          where: { type: 1 },
+          limit: 3,
+        });
+    
+        let tags =  await models.Reference.findAll({
+          attributes: ['id', 'name', 'slug'],
+          order: [Sequelize.literal("RAND()")],
+          where: { type: 2 },
+          limit: 5,
+        });
+
         let obj = {
-          article_id: article.id,
-          reference_id: category.id,
-        };
-        data.push(obj);
-      });
-      tags.map((tag) => {
-        let obj = {
-          article_id: article.id,
-          reference_id: tag.id,
-        };
-        data.push(obj);
-      });
-    });
+            article_id: article.id,
+            categories: JSON.stringify(categories),
+            tags: JSON.stringify(tags),
+        }
+
+        data.push(obj)
+          
+      })
+  )
+   
+   
 
     queryInterface.bulkDelete("article_references", null, {});
     return queryInterface.bulkInsert("article_references", data, {});

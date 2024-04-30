@@ -24,9 +24,18 @@ module.exports = (sequelize, DataTypes) => {
   }
   ArticleComment.init(
     {
-      parent_id: DataTypes.INTEGER,
-      artiucle_id: DataTypes.INTEGER,
-      user_id: DataTypes.INTEGER,
+      parentId: {
+        field: "parent_id",
+        type: DataTypes.INTEGER,
+      },
+      articleId: {
+        field: "article_id",
+        type: DataTypes.INTEGER,
+      },
+      userId: {
+        field: "user_id",
+        type: DataTypes.INTEGER,
+      },
       comment: DataTypes.STRING,
       createdAt: {
         field: "created_at",
@@ -40,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ArticleComment",
-      tableName: "auth_roles",
+      tableName: "articles_comments",
     }
   );
   return ArticleComment;

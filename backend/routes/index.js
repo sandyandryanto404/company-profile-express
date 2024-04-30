@@ -38,9 +38,9 @@ appRouter.post('/account/password', accountController.password);
 
 // Article Pages
 appRouter.get('/article/list', articleController.list);
-appRouter.get('/article/:slug', articleController.detail);
-appRouter.get('/article/comments/:id', articleController.detail);
-appRouter.post('/article/comments/:id', articleController.comments);
+appRouter.get('/article/detail/:slug', articleController.detail);
+appRouter.get('/article/comments/:id', articleController.comments);
+appRouter.post('/article/comment/:id', articleController.comment);
 
 // Auth Pages
 appRouter.post('/auth/login', authController.login);

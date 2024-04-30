@@ -24,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Article.init(
     {
-      user_id: DataTypes.INTEGER,
+      userId: {
+        field: "user_id",
+        type: DataTypes.INTEGER,
+      },
       image: DataTypes.STRING,
       slug: DataTypes.STRING,
       title: DataTypes.STRING,

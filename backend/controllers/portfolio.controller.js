@@ -9,25 +9,76 @@
  * with this source code.
  */
 
+const db = require("../models");
+const Portfolio = db.Portfolio;
+const PortfolioImage = db.PortfolioImage;
+const Customer = db.Customer;
+
 async function list(req, res) {
-    res.status(200).send({
-        data: null,
-        status: true,
-        message: "ok"
-    });
-    return;
+  Customer.hasMany(Portfolio, { foreignKey: "customerId" });
+  Portfolio.belongsTo(Customer, { foreignKey: "customerId" });
+
+  res.status(200).send({
+    data: {
+      portfolios: await Portfolio.findAll({
+        include: [
+          {
+            model: Customer,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        ],
+        where: { status: 1 },
+        order: [["sort", "asc"]],
+      }),
+    },
+    status: true,
+    message: "ok",
+  });
+  return;
 }
 
 async function detail(req, res) {
-    res.status(200).send({
-        data: null,
-        status: true,
-        message: "ok"
+  let id = req.params.id;
+
+  Customer.hasMany(Portfolio, { foreignKey: "customerId" });
+  Portfolio.belongsTo(Customer, { foreignKey: "customerId" });
+
+  let model = await Portfolio.findOne({
+    include: [
+      {
+        model: Customer,
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
+    ],
+    where: { id: id },
+  });
+
+  if (!model) {
+    res.status(400).send({
+      message: "Record with id " + id + " was not found.!!",
     });
     return;
+  }
+
+  let images = await PortfolioImage.findAll({
+    where: { portfolio_id: id },
+    order: [["id", "desc"]],
+  });
+
+  let data = {
+    portfolio: model,
+    images: images,
+  };
+
+  res.status(200).send({
+    data: data,
+    status: true,
+    message: "ok",
+  });
+  return;
 }
 
 module.exports = {
-    list,
-    detail
-}
+  list,
+  detail,
+};

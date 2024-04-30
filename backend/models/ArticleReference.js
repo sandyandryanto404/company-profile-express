@@ -24,8 +24,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   ArticleReference.init(
     {
-      article_id: DataTypes.INTEGER,
-      reference_id: DataTypes.INTEGER,
+      articleId: {
+        field: "article_id",
+        type: DataTypes.INTEGER,
+      },
+      categories: DataTypes.STRING,
+      tags: DataTypes.STRING
     },
     {
       sequelize,

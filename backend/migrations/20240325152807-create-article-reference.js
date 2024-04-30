@@ -16,15 +16,24 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface
       .createTable("article_references", {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: Sequelize.BIGINT.UNSIGNED,
+        },
         article_id: {
           allowNull: false,
           primaryKey: true,
           type: Sequelize.BIGINT.UNSIGNED,
         },
-        reference_id: {
-          allowNull: false,
-          primaryKey: true,
-          type: Sequelize.BIGINT.UNSIGNED,
+        categories: {
+          type: Sequelize.TEXT("long"),
+          allowNull: true,
+        },
+        tags: {
+          type: Sequelize.TEXT("long"),
+          allowNull: true,
         },
       })
       .then(() =>
@@ -33,18 +42,6 @@ module.exports = {
           fields: ["article_id"],
           references: {
             table: "articles",
-            field: "id",
-          },
-          onDelete: "no action",
-          onUpdate: "no action",
-        })
-      )
-      .then(() =>
-        queryInterface.addConstraint("article_references", {
-          type: "FOREIGN KEY",
-          fields: ["reference_id"],
-          references: {
-            table: "references",
             field: "id",
           },
           onDelete: "no action",
