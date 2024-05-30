@@ -69,8 +69,7 @@ class Profile extends Component{
             });
             await AccountService.profileUpdate(fields).then((result) => {
                 setTimeout(() => {
-                    let data = result.data
-                    let success = data.success
+                    let success = result.data.message
                     this.setState({
                         loadingSubmit: false,
                         success: success,
@@ -153,13 +152,13 @@ class Profile extends Component{
     async handleFileChange (e) {
         if (e.target.files) {
             let formData = new FormData()
-            formData.append("file", e.target.files[0]);
+            formData.append("file_image", e.target.files[0]);
             this.setState({ loadingFile: true })
             await AccountService.upload(formData).then((result) => { 
-                setTimeout(() => {
+                setTimeout(() => {    
                     let defaultImage  = this.state.imgPreview
                     if(result.data.image){
-                        defaultImage = process.env.REACT_APP_BACKEND_URL+"/"+result.data.image
+                        defaultImage = process.env.REACT_APP_BACKEND_URL+"/"+result.data.data.image
                     }
                     this.setState({
                         imgPreview: defaultImage,

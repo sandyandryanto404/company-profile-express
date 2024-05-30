@@ -53,7 +53,7 @@ class Login extends Component{
             }).catch((error) => {
                 let response = error.response
                 let data = response.data
-                let message = data.errors
+                let message = data.message
                 this.setState({
                     loadingSubmit: false,
                     message: message

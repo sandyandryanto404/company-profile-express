@@ -10,63 +10,79 @@
  */
 
 const db = require("../models");
-const { Sequelize, Op } = require("sequelize");
+const { Sequelize, Op, QueryTypes } = require("sequelize");
 const auth_user = require('../helpers/auth_user');
 const User = db.User;
 const Article = db.Article;
 const ArticleComment = db.ArticleComment;
-const ArticleReference = db.ArticleReference;
+
 
 async function list(req, res) {
-  User.hasMany(Article, { foreignKey: "userId" });
-  Article.belongsTo(User, { foreignKey: "userId" });
-
-  ArticleReference.belongsTo(Article, { foreignKey: "articleId" });
-  Article.hasMany(ArticleReference, { foreignKey: "articleId" });
-
-  let relations = [
-    {
-      model: User,
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-    },
-    {
-      model: ArticleReference,
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-    },
-  ];
-
+ 
   let page = req.query.page || 1;
   let limit = 3 * parseInt(page);
-  let newArticle = await Article.findOne({
-    include: relations,
-    where: { status: 1 },
-    order: [["id", "desc"]],
-  });
+  let newArticle =  await db.sequelize.query(`
+    SELECT 
+        a.id,
+        a.title,
+        a.slug,
+        a.description,
+        a.created_at,
+        u.first_name,
+        u.last_name,
+        u.image,
+        u.gender,
+        u.about_me,
+        ar.categories
+    FROM articles a
+    INNER JOIN users u ON u.id = a.user_id
+    INNER JOIN article_references ar ON ar.article_id = a.id
+    WHERE a.status = 1 ORDER BY a.id LIMIT 1 OFFSET 0
+  `, { type: QueryTypes.SELECT })
 
-  let newArticles = await Article.findAll({
-    include: relations,
-    where: {
-      status: 1,
-      id: {
-        [Op.not]: newArticle.id,
-      },
-    },
-    limit: 3,
-    order: [["id", "desc"]],
-  });
+  let newArticles = await db.sequelize.query(`
+      SELECT 
+        a.id,
+        a.title,
+        a.slug,
+        a.description,
+        a.created_at,
+        u.first_name,
+        u.last_name,
+        u.image,
+        u.gender,
+        u.about_me,
+        ar.categories
+    FROM articles a
+    INNER JOIN users u ON u.id = a.user_id
+    INNER JOIN article_references ar ON ar.article_id = a.id
+    WHERE a.status = 1 ORDER BY a.id LIMIT 3 OFFSET 1
+  `, { type: QueryTypes.SELECT })
 
-  let Stories = await Article.findOne({
-    include: relations,
-    where: { status: 1 },
-    limit: limit,
-    order: [["id", "desc"]],
-  });
+  let Stories = await await db.sequelize.query(`
+      SELECT 
+          a.id,
+          a.title,
+          a.slug,
+          a.description,
+          a.created_at,
+          u.first_name,
+          u.last_name,
+          u.image,
+          u.gender,
+          u.about_me,
+          ar.categories
+      FROM articles a
+      INNER JOIN users u ON u.id = a.user_id
+      INNER JOIN article_references ar ON ar.article_id = a.id
+      WHERE a.status = 1 ORDER BY a.id LIMIT `+limit+`
+    `, { type: QueryTypes.SELECT })
 
   let totalActive = await Article.count({ where: { status: 1 } });
 
   let data = {
     continue: limit <= totalActive,
-    new_article: newArticle,
+    new_article: newArticle[0],
     new_articles: newArticles,
     page: page,
     stories: Stories,
@@ -81,33 +97,37 @@ async function list(req, res) {
 }
 
 async function detail(req, res) {
+
   let slug = req.params.slug;
-  User.hasMany(Article, { foreignKey: "userId" });
-  Article.belongsTo(User, { foreignKey: "userId" });
-
-  let relations = [
-    {
-      model: User,
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "password", "resetToken"],
-      },
-    },
-  ];
-
-  let model = await Article.findOne({
-    include: relations,
-    where: { slug: slug },
-  });
+  let model = await db.sequelize.query(`
+    SELECT 
+        a.id,
+        a.title,
+        a.slug,
+        a.description,
+        a.content,
+        a.created_at,
+        u.first_name,
+        u.last_name,
+        u.image,
+        u.gender,
+        u.about_me,
+        ar.categories
+    FROM articles a
+    INNER JOIN users u ON u.id = a.user_id
+    INNER JOIN article_references ar ON ar.article_id = a.id
+    WHERE a.status = 1 AND a.slug = '`+slug+`' LIMIT 1
+  `, { type: QueryTypes.SELECT })
 
   if (!model) {
     res.status(400).send({
-      message: "Record with id " + id + " was not found.!!",
+      message: "Article with id " + slug + " was not found.!!",
     });
     return;
   }
 
   res.status(200).send({
-    data: model,
+    data: model[0],
     status: true,
     message: "ok",
   });
@@ -122,7 +142,7 @@ async function comments(req, res) {
     {
       model: User,
       attributes: {
-        exclude: ["createdAt", "updatedAt", "password", "resetToken", "confirmToken"],
+        exclude: ["updatedAt", "password", "resetToken", "confirmToken"],
       },
     },
   ];
@@ -181,6 +201,7 @@ async function buildTree(relations, article_id, parent_id) {
          "id": comment.id,
          "parentId": comment.parentId,
          "comment": comment.comment,
+         "created_at": comment.createdAt,
          "user": comment.User
       }
 

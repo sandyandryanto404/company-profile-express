@@ -22,11 +22,11 @@ class ArticleService {
     }
 
     commentList(id){
-        return service().get("api/article/comment/list/"+id)
+        return service().get("api/article/comments/"+id)
     }
 
     commentCreate(id, data){
-        return service(false, true).post("api/article/comment/create/"+id, data)
+        return service(false, true).post("api/article/comment/"+id, data)
     }
 
 }

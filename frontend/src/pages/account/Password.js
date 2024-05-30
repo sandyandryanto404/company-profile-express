@@ -42,7 +42,7 @@ class Password extends Component{
         if(Object.keys(this.state.errors).length === 0){
             await AccountService.passwordUpdate(fields).then((result) => {
                 let data = result.data
-                let success = data.success
+                let success = data.message
                 this.setState({
                     loadingSubmit: false,
                     success: success,
@@ -55,7 +55,7 @@ class Password extends Component{
             }).catch((error) => {
                 let response = error.response
                 let data = response.data
-                let message = data.errors
+                let message = data.message
                 this.setState({
                     loadingSubmit: false,
                     message: message

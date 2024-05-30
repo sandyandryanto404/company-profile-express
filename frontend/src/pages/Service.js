@@ -33,7 +33,7 @@ class Service extends Component{
         await PageService.service().then((response) => {
             setTimeout(() => { 
                 this.setState({
-                    content: response.data,
+                    content: response.data.data,
                     loading: false
                 })
             }, 1500)

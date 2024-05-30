@@ -46,7 +46,14 @@ class Register extends Component{
 
     async submitForm(fields){
         if(Object.keys(this.state.errors).length === 0){
-            await AuthService.register(fields).then((result) => {
+
+            let formData = {
+                email: fields.email,
+                password: fields.password,
+                password_confirm: fields.password_confirmation 
+            }
+
+            await AuthService.register(formData).then((result) => {
                 let data = result.data
                 let success = data.success
                 this.setState({
@@ -59,7 +66,7 @@ class Register extends Component{
             }).catch((error) => {
                 let response = error.response
                 let data = response.data
-                let message = data.errors
+                let message = data.message
                 this.setState({
                     loadingSubmit: false,
                     message: message

@@ -22,7 +22,7 @@ export default function service(upload, auth) {
         }
     }else{
         headers = {
-            'Content-Type': 'application/json; charset=UTF-8;'
+            'Content-Type': 'application/json'
         }
     }
 

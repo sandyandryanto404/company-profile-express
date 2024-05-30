@@ -217,6 +217,8 @@ async function forgotPassword(req, res) {
         updated_at: new Date()
     }
 
+    let user = findUserByEmail
+
     await User.update(formUpdate, {
         where: {
             id: user.id
@@ -224,7 +226,7 @@ async function forgotPassword(req, res) {
     })
 
     res.status(200).send({
-        data: token,
+        data: resetToken,
         status: true,
         message: "We have e-mailed your password reset link!"
     });

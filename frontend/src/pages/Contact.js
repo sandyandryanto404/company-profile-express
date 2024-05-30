@@ -11,6 +11,7 @@ class Contact extends Component{
         this.state = { 
             loadingSubmit:false,
             loading: true,
+            success: false,
             content: {},
             fields: {
                 name: "",
@@ -52,7 +53,7 @@ class Contact extends Component{
         await PageService.contact().then((response) => {
             setTimeout(() => { 
                 this.setState({
-                    content: response.data,
+                    content: response.data.data,
                     loading: false
                 })
             }, 1500)
@@ -63,7 +64,7 @@ class Contact extends Component{
 
     async submitForm(fields){
         if(Object.keys(this.state.errors).length === 0){
-            this.setState({ loadingSubmit: true })
+            this.setState({ loadingSubmit: true, success: false })
             await PageService.message(fields).then((response) => {
                 setTimeout(() => { 
                     this.setState({
@@ -73,7 +74,8 @@ class Contact extends Component{
                             subject: "",
                             message: ""
                         },
-                        loadingSubmit: false
+                        loadingSubmit: false,
+                        success: true
                     })
                 }, 1500)
             }).catch((error) => {
@@ -102,6 +104,14 @@ class Contact extends Component{
                                 </div>
                                 <div className="row gx-5 justify-content-center">
                                     <div className="col-lg-8 col-xl-6">
+
+                                            { this.state.success ? <>
+                                            
+                                                <div className="alert alert-success" role="alert">
+                                                    Your message has been sent. Thank you!
+                                                </div>
+                                            
+                                            </> : <></> }
                                     
                                             <form id="contactForm" noValidate autoComplete="off" onSubmit={this.form.handleSubmit} data-sb-form-api-token="API_TOKEN">
                                                 

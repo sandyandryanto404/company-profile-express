@@ -11,7 +11,7 @@
 
 const faker = require("faker");
 const db = require("../models");
-const { Sequelize, Op } = require("sequelize");
+const { Sequelize, Op, QueryTypes } = require("sequelize");
 const Slider = db.Slider
 const Service = db.Service
 const Testimonial = db.Testimonial
@@ -32,6 +32,29 @@ async function ping(req, res) {
 
 async function home(req, res) {
 
+    Customer.hasMany(Testimonial, {foreignKey: 'customer_id'})
+
+    Testimonial.belongsTo(Customer, {foreignKey: 'customer_id'})
+
+    let articles = await db.sequelize.query(`
+        SELECT 
+            a.id,
+            a.title,
+            a.slug,
+            a.description,
+            a.created_at,
+            u.first_name,
+            u.last_name,
+            u.image,
+            u.gender,
+            u.about_me,
+            ar.categories
+        FROM articles a
+        INNER JOIN users u ON u.id = a.user_id
+        INNER JOIN article_references ar ON ar.article_id = a.id
+        WHERE a.status = 1 ORDER BY RAND() LIMIT 3 
+    `, { type: QueryTypes.SELECT })
+
     let data = {
         "header": {
             "title": faker.lorem.sentences(5),
@@ -47,14 +70,13 @@ async function home(req, res) {
             order: [Sequelize.literal("RAND()")],
         }),
         "testimonial": await Testimonial.findOne({
+            include: [{
+                model: Customer
+            }],
             where: { status: 1 },
             order: [Sequelize.literal("RAND()")],
         }),
-        "articles": await Article.findAll({
-            where: { status: 1 },
-            limit: 3,
-            order: [Sequelize.literal("RAND()")],
-        })
+        "articles": articles
     }
 
     res.status(200).send({
@@ -214,6 +236,8 @@ async function message(req, res) {
 }
 
 async function subscribe(req, res) {
+
+    
 
     if (!req.body.email) {
         res.status(400).send({
