@@ -37,7 +37,7 @@ async function list(req, res) {
     FROM articles a
     INNER JOIN users u ON u.id = a.user_id
     INNER JOIN article_references ar ON ar.article_id = a.id
-    WHERE a.status = 1 ORDER BY a.id LIMIT 1 OFFSET 0
+    WHERE a.status = 1 ORDER BY a.id DESC LIMIT 1 OFFSET 0
   `, { type: QueryTypes.SELECT })
 
   let newArticles = await db.sequelize.query(`
@@ -56,7 +56,7 @@ async function list(req, res) {
     FROM articles a
     INNER JOIN users u ON u.id = a.user_id
     INNER JOIN article_references ar ON ar.article_id = a.id
-    WHERE a.status = 1 ORDER BY a.id LIMIT 3 OFFSET 1
+    WHERE a.status = 1 ORDER BY a.id DESC LIMIT 3 OFFSET 1
   `, { type: QueryTypes.SELECT })
 
   let Stories = await await db.sequelize.query(`
@@ -75,7 +75,7 @@ async function list(req, res) {
       FROM articles a
       INNER JOIN users u ON u.id = a.user_id
       INNER JOIN article_references ar ON ar.article_id = a.id
-      WHERE a.status = 1 ORDER BY a.id LIMIT `+limit+`
+      WHERE a.status = 1 ORDER BY a.id DESC LIMIT `+limit+`
     `, { type: QueryTypes.SELECT })
 
   let totalActive = await Article.count({ where: { status: 1 } });
